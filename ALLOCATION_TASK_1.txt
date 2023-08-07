@@ -1,0 +1,46 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+dtst=pd.read_csv('creditcard.csv')
+dtst
+
+dtst.head()
+
+dtst.describe()
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+dtst.tail()
+dtst.info()
+dtst.isna().sum()
+dtst['Class'].value_counts()
+legit=dtst[dtst.Class==0]
+fraud=dtst[dtst.Class==1]
+print(legit.shape)
+print(fraud.shape)
+legit.Amount.describe()
+fraud.Amount.describe()
+dtst.groupby('Class').mean()
+legit_sample=legit.sample(n=492)
+new_dtst=pd.concat([legit_sample,fraud],axis=0) #axix=1 ~ Columns axis =0 means Row
+new_dtst.head()
+new_dtst.tail()
+new_dtst['Class'].value_counts
+new_dtst.groupby('Class').mean()
+x=new_dtst.drop(columns='Class',axis=1)
+y=new_dtst['Class']
+
+x
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,stratify=y,random_state=2)
+print(x.shape,x_train.shape,x_test.shape)
+model=LogisticRegression()
+model.fit(x_train,y_train)
+#accuracy on Training data
+x_train_pred=model.predict(x_train)
+train_accuracy=accuracy_score(x_train_pred,y_train)
+print('Accuracy Score',train_accuracy)
+#accuracy x test prediction
+x_test_pred=model.predict(x_test)
+x_test_accuracy=accuracy_score(x_test_pred,y_test)
+print('Accuracy Score',x_test_accuracy)
